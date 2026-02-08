@@ -1,64 +1,71 @@
 import { useState, useCallback } from 'react';
-import type { Coordinates, TravelMode } from './types/coffee-shop';
-import type { Recommendation } from './recommend';
-import { getRecommendation } from './recommend';
-import Header from './components/Header';
-import LocationPrompt from './components/LocationPrompt';
-import OrderInput from './components/OrderInput';
-import ModeSelect from './components/ModeSelect';
-import Result from './components/Result';
-import Footer from './components/Footer';
-
-type Step = 'location' | 'order' | 'mode' | 'result';
+import { AnimatePresence } from 'framer-motion';
+import { Helmet, HelmetProvider } from 'react-helmet-async';
+import type { Coordinates, TravelMode, AppStep, Recommendation } from '@/data/types';
+import { getRecommendation } from '@/recommend';
+import { Header } from '@/components/Header';
+import { LocationPrompt } from '@/components/LocationPrompt';
+import { OrderInput } from '@/components/OrderInput';
+import { ModeSelect } from '@/components/ModeSelect';
+import { Result } from '@/components/Result';
+import { Footer } from '@/components/Footer';
 
 export default function App() {
-  const [step, setStep] = useState<Step>('location');
+  const [step, setStep] = useState<AppStep>('location');
   const [location, setLocation] = useState<Coordinates | null>(null);
   const [order, setOrder] = useState('');
   const [result, setResult] = useState<Recommendation | null>(null);
-  const [fade, setFade] = useState(true);
-
-  const transition = useCallback((next: Step) => {
-    setFade(false);
-    setTimeout(() => {
-      setStep(next);
-      setFade(true);
-    }, 300);
-  }, []);
 
   const handleLocation = useCallback((coords: Coordinates) => {
     setLocation(coords);
-    transition('order');
-  }, [transition]);
+    setStep('order');
+  }, []);
 
   const handleOrder = useCallback((value: string) => {
     setOrder(value);
-    transition('mode');
-  }, [transition]);
+    setStep('mode');
+  }, []);
 
   const handleMode = useCallback((mode: TravelMode) => {
     if (!location) return;
     const rec = getRecommendation(location, order, mode);
     setResult(rec);
-    transition('result');
-  }, [location, order, transition]);
+    setStep('result');
+  }, [location, order]);
 
   const handleReset = useCallback(() => {
     setResult(null);
     setOrder('');
-    transition('location');
-  }, [transition]);
+    setStep('location');
+  }, []);
 
   return (
-    <div className="app">
-      <Header />
-      <main className={`main ${fade ? 'fade-in' : 'fade-out'}`}>
-        {step === 'location' && <LocationPrompt onLocation={handleLocation} />}
-        {step === 'order' && <OrderInput onSubmit={handleOrder} />}
-        {step === 'mode' && <ModeSelect onSelect={handleMode} />}
-        {step === 'result' && <Result recommendation={result} onReset={handleReset} />}
-      </main>
-      <Footer />
-    </div>
+    <HelmetProvider>
+      <Helmet>
+        <title>coffeeaust.in — find your next cup</title>
+        <meta name="description" content="One coffee recommendation based on your location and usual order. No scrolling, no decisions — just go." />
+        <meta property="og:title" content="coffeeaust.in — find your next cup" />
+        <meta property="og:description" content="One coffee recommendation based on your location and usual order. No scrolling, no decisions — just go." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://coffeeaust.in" />
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" content="coffeeaust.in — find your next cup" />
+        <meta name="twitter:description" content="One coffee recommendation based on your location and usual order. No scrolling, no decisions — just go." />
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#faf8f5" />
+      </Helmet>
+      <div className="mx-auto flex min-h-dvh max-w-[520px] flex-col px-5 sm:px-6">
+        <Header />
+        <main className="flex-1 py-10">
+          <AnimatePresence mode="wait">
+            {step === 'location' && <LocationPrompt key="location" onLocation={handleLocation} />}
+            {step === 'order' && <OrderInput key="order" onSubmit={handleOrder} />}
+            {step === 'mode' && <ModeSelect key="mode" onSelect={handleMode} />}
+            {step === 'result' && <Result key="result" recommendation={result} userLocation={location} onReset={handleReset} />}
+          </AnimatePresence>
+        </main>
+        <Footer />
+      </div>
+    </HelmetProvider>
   );
 }

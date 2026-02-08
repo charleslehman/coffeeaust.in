@@ -1,0 +1,153 @@
+@import 'tailwindcss';
+@import 'maplibre-gl/dist/maplibre-gl.css';
+
+/* ===========================
+   CSS Variables (HSL-based for shadcn/ui)
+   Warm coffee palette
+   =========================== */
+
+:root {
+  --background: 30 33% 97%;
+  --foreground: 20 14% 10%;
+  --card: 0 0% 100%;
+  --card-foreground: 20 14% 10%;
+  --primary: 24 60% 40%;
+  --primary-foreground: 30 33% 97%;
+  --secondary: 30 15% 92%;
+  --secondary-foreground: 20 14% 20%;
+  --muted: 30 15% 92%;
+  --muted-foreground: 20 10% 45%;
+  --accent: 24 60% 40%;
+  --accent-foreground: 30 33% 97%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 30 20% 88%;
+  --ring: 24 60% 40%;
+  --radius: 0.75rem;
+}
+
+/* ===========================
+   Base styles
+   =========================== */
+
+* {
+  border-color: hsl(var(--border));
+}
+
+body {
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overscroll-behavior-y: contain;
+}
+
+/* Prevent iOS zoom on inputs */
+input, select, textarea {
+  font-size: 16px !important;
+}
+
+/* ===========================
+   Component classes
+   =========================== */
+
+.btn-primary {
+  @apply inline-flex items-center justify-center gap-2 rounded-xl bg-[hsl(var(--foreground))] px-8 py-3.5 text-sm font-medium text-[hsl(var(--background))] transition-all duration-200 hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed;
+}
+
+.btn-secondary {
+  @apply inline-flex items-center justify-center gap-2 rounded-xl px-8 py-3 text-sm font-medium text-[hsl(var(--muted-foreground))] transition-colors hover:text-[hsl(var(--foreground))];
+}
+
+.btn-navigate {
+  @apply inline-flex items-center justify-center gap-2 rounded-xl bg-[hsl(var(--primary))] px-8 py-4 text-base font-semibold text-white transition-all duration-200 hover:opacity-90;
+}
+
+.card {
+  @apply bg-white rounded-2xl border shadow-card;
+}
+
+.filter-pill {
+  @apply inline-flex items-center rounded-full px-4 py-2 text-sm font-medium border transition-colors;
+}
+
+.touch-target {
+  @apply min-h-[44px] min-w-[44px];
+}
+
+.safe-area-top {
+  padding-top: env(safe-area-inset-top);
+}
+
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* ===========================
+   Animations
+   =========================== */
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(2.5); opacity: 0; }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease both;
+}
+
+.animate-slide-up {
+  animation: slide-up 0.4s ease both;
+}
+
+.animate-scale-in {
+  animation: scale-in 0.3s ease both;
+}
+
+/* ===========================
+   Reduced motion
+   =========================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ===========================
+   Custom shadows
+   =========================== */
+
+@theme {
+  --shadow-subtle: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+  --shadow-card: 0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.03);
+  --shadow-elevated: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.03);
+  --shadow-modal: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+}
