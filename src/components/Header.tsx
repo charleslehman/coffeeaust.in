@@ -1,14 +1,15 @@
 import React from 'react';
+import { Coffee } from 'lucide-react';
 
 export const Header: React.FC = () => {
   return (
-    <header className="safe-area-top border-b border-[hsl(var(--border))] pb-6 pt-10 sm:pt-12">
-      <h1 className="font-serif text-[2rem] font-normal tracking-tight text-[hsl(var(--foreground))]">
+    <header className="safe-area-top flex items-center gap-2.5 pb-0 pt-6 sm:pt-8">
+      <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[hsl(var(--primary))]/10">
+        <Coffee className="h-4 w-4 text-[hsl(var(--primary))]" />
+      </div>
+      <span className="text-sm font-semibold tracking-tight text-[hsl(var(--foreground))]">
         coffeeaust.in
-      </h1>
-      <p className="mt-1 text-sm text-[hsl(var(--muted-foreground))]">
-        one recommendation. no scrolling. just go.
-      </p>
+      </span>
     </header>
   );
 };

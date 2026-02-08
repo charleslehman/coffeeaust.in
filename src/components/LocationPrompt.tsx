@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { motion } from 'framer-motion';
-import { MapPin } from 'lucide-react';
-import { fadeInUp } from '@/utils/animations';
+import { MapPin, Loader2 } from 'lucide-react';
+import { fadeInUp, staggerContainer } from '@/utils/animations';
 import { analytics } from '@/utils/analytics';
 import type { Coordinates } from '@/data/types';
 
@@ -44,30 +44,56 @@ export const LocationPrompt: React.FC<LocationPromptProps> = ({ onLocation }) =>
 
   return (
     <motion.section
-      variants={fadeInUp}
+      variants={staggerContainer}
       initial="hidden"
       animate="show"
-      className="flex flex-col"
+      exit={{ opacity: 0, y: -8, transition: { duration: 0.2 } }}
+      className="flex flex-1 flex-col items-center justify-center text-center"
     >
-      <h2 className="font-serif text-[1.75rem] font-normal tracking-tight">
-        Where are you?
-      </h2>
-      <p className="mt-2 max-w-[36ch] text-sm text-[hsl(var(--muted-foreground))]">
-        We'll find the best coffee shop near you.
-      </p>
-      <button
-        className="btn-primary touch-target mt-8 w-full"
+      <motion.div variants={fadeInUp} className="animate-float mb-8">
+        <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-3xl bg-[hsl(var(--primary))]/10">
+          <span className="text-4xl" role="img" aria-label="coffee">&#9749;</span>
+        </div>
+      </motion.div>
+
+      <motion.h2
+        variants={fadeInUp}
+        className="font-serif text-3xl font-normal tracking-tight sm:text-4xl"
+      >
+        Find your next cup
+      </motion.h2>
+
+      <motion.p
+        variants={fadeInUp}
+        className="mt-3 max-w-[28ch] text-[15px] leading-relaxed text-[hsl(var(--muted-foreground))]"
+      >
+        One recommendation based on where you are and what you like.
+      </motion.p>
+
+      <motion.button
+        variants={fadeInUp}
+        whileTap={{ scale: 0.98 }}
+        className="btn-primary touch-target mt-10 w-full max-w-[280px]"
         onClick={requestLocation}
         disabled={loading}
         aria-label="Share your location to find nearby coffee shops"
       >
-        <MapPin className="h-4 w-4" />
+        {loading ? (
+          <Loader2 className="h-4 w-4 animate-spin" />
+        ) : (
+          <MapPin className="h-4 w-4" />
+        )}
         {loading ? 'Finding you...' : 'Share my location'}
-      </button>
+      </motion.button>
+
       {error && (
-        <p className="mt-3 text-sm text-[hsl(var(--destructive))]" role="alert">
+        <motion.p
+          variants={fadeInUp}
+          className="mt-4 text-sm text-[hsl(var(--destructive))]"
+          role="alert"
+        >
           {error}
-        </p>
+        </motion.p>
       )}
     </motion.section>
   );

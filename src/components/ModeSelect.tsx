@@ -17,17 +17,25 @@ export const ModeSelect: React.FC<ModeSelectProps> = ({ onSelect }) => {
 
   return (
     <motion.section
-      variants={fadeInUp}
+      variants={staggerContainer}
       initial="hidden"
       animate="show"
-      className="flex flex-col"
+      exit={{ opacity: 0, y: -8, transition: { duration: 0.2 } }}
+      className="flex flex-1 flex-col justify-center"
     >
-      <h2 className="font-serif text-[1.75rem] font-normal tracking-tight">
-        Walking or driving?
-      </h2>
-      <p className="mt-2 max-w-[36ch] text-sm text-[hsl(var(--muted-foreground))]">
-        Walking searches within 20 min. Driving within 15.
-      </p>
+      <motion.h2
+        variants={fadeInUp}
+        className="font-serif text-3xl font-normal tracking-tight sm:text-4xl"
+      >
+        How far?
+      </motion.h2>
+      <motion.p
+        variants={fadeInUp}
+        className="mt-3 max-w-[32ch] text-[15px] leading-relaxed text-[hsl(var(--muted-foreground))]"
+      >
+        We'll search for the best shop within range.
+      </motion.p>
+
       <motion.div
         variants={staggerContainer}
         initial="hidden"
@@ -36,29 +44,41 @@ export const ModeSelect: React.FC<ModeSelectProps> = ({ onSelect }) => {
       >
         <motion.button
           variants={fadeInUp}
+          whileHover={{ y: -2 }}
           whileTap={{ scale: 0.98 }}
-          className="touch-target card flex flex-col items-center gap-3 px-4 py-8 transition-colors hover:border-[hsl(var(--primary))] hover:text-[hsl(var(--primary))]"
+          className="touch-target card flex flex-col items-center gap-3 px-4 py-8 transition-all hover:border-[hsl(var(--primary))] hover:shadow-elevated"
           onClick={() => handleSelect('walk')}
           role="button"
           tabIndex={0}
           aria-label="Search for coffee shops within walking distance"
           onKeyDown={e => e.key === 'Enter' && handleSelect('walk')}
         >
-          <Footprints className="h-7 w-7" />
-          <span className="text-sm font-medium">Walk</span>
+          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[hsl(var(--primary))]/10">
+            <Footprints className="h-6 w-6 text-[hsl(var(--primary))]" />
+          </div>
+          <div className="text-center">
+            <span className="block text-sm font-semibold">Walk</span>
+            <span className="mt-0.5 block text-xs text-[hsl(var(--muted-foreground))]">within 20 min</span>
+          </div>
         </motion.button>
         <motion.button
           variants={fadeInUp}
+          whileHover={{ y: -2 }}
           whileTap={{ scale: 0.98 }}
-          className="touch-target card flex flex-col items-center gap-3 px-4 py-8 transition-colors hover:border-[hsl(var(--primary))] hover:text-[hsl(var(--primary))]"
+          className="touch-target card flex flex-col items-center gap-3 px-4 py-8 transition-all hover:border-[hsl(var(--primary))] hover:shadow-elevated"
           onClick={() => handleSelect('drive')}
           role="button"
           tabIndex={0}
           aria-label="Search for coffee shops within driving distance"
           onKeyDown={e => e.key === 'Enter' && handleSelect('drive')}
         >
-          <Car className="h-7 w-7" />
-          <span className="text-sm font-medium">Drive</span>
+          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[hsl(var(--primary))]/10">
+            <Car className="h-6 w-6 text-[hsl(var(--primary))]" />
+          </div>
+          <div className="text-center">
+            <span className="block text-sm font-semibold">Drive</span>
+            <span className="mt-0.5 block text-xs text-[hsl(var(--muted-foreground))]">within 15 min</span>
+          </div>
         </motion.button>
       </motion.div>
     </motion.section>
