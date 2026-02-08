@@ -1,0 +1,13 @@
+{
+  "name": "coffeeaust.in",
+  "version": "0.1.0",
+  "description": "Web app that shows users one coffee recommendation based on their usual order and location",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "keywords": ["coffee", "austin", "recommendation"],
+  "license": "MIT"
+}
