@@ -55,20 +55,24 @@ export default function App() {
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#faf8f5" />
       </Helmet>
-      <div className="mx-auto flex min-h-dvh max-w-[520px] flex-col px-5 sm:px-6">
-        <Header />
-        <div className="mt-4 mb-6">
-          <StepIndicator currentStep={step} />
+
+      {/* Desktop: centered card on a subtle background. Mobile: full-bleed. */}
+      <div className="min-h-dvh lg:flex lg:items-center lg:justify-center lg:p-8">
+        <div className="mx-auto flex min-h-dvh max-w-[520px] flex-col px-5 sm:px-6 lg:min-h-0 lg:w-[520px] lg:rounded-3xl lg:border lg:border-[hsl(var(--border))] lg:bg-white lg:px-10 lg:shadow-modal">
+          <Header onReset={handleReset} />
+          <div className="mt-4 mb-6">
+            <StepIndicator currentStep={step} />
+          </div>
+          <main className="flex flex-1 flex-col pb-4">
+            <AnimatePresence mode="wait">
+              {step === 'location' && <LocationPrompt key="location" onLocation={handleLocation} />}
+              {step === 'order' && <OrderInput key="order" onSubmit={handleOrder} />}
+              {step === 'mode' && <ModeSelect key="mode" onSelect={handleMode} />}
+              {step === 'result' && <Result key="result" recommendation={result} userLocation={location} onReset={handleReset} />}
+            </AnimatePresence>
+          </main>
+          <Footer />
         </div>
-        <main className="flex flex-1 flex-col pb-4">
-          <AnimatePresence mode="wait">
-            {step === 'location' && <LocationPrompt key="location" onLocation={handleLocation} />}
-            {step === 'order' && <OrderInput key="order" onSubmit={handleOrder} />}
-            {step === 'mode' && <ModeSelect key="mode" onSelect={handleMode} />}
-            {step === 'result' && <Result key="result" recommendation={result} userLocation={location} onReset={handleReset} />}
-          </AnimatePresence>
-        </main>
-        <Footer />
       </div>
     </HelmetProvider>
   );
