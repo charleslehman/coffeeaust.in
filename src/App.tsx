@@ -4,6 +4,7 @@ import { Helmet, HelmetProvider } from 'react-helmet-async';
 import type { Coordinates, TravelMode, AppStep, Recommendation } from '@/data/types';
 import { getRecommendation } from '@/recommend';
 import { Header } from '@/components/Header';
+import { StepIndicator } from '@/components/StepIndicator';
 import { LocationPrompt } from '@/components/LocationPrompt';
 import { OrderInput } from '@/components/OrderInput';
 import { ModeSelect } from '@/components/ModeSelect';
@@ -56,7 +57,10 @@ export default function App() {
       </Helmet>
       <div className="mx-auto flex min-h-dvh max-w-[520px] flex-col px-5 sm:px-6">
         <Header />
-        <main className="flex-1 py-10">
+        <div className="mt-4 mb-6">
+          <StepIndicator currentStep={step} />
+        </div>
+        <main className="flex flex-1 flex-col pb-4">
           <AnimatePresence mode="wait">
             {step === 'location' && <LocationPrompt key="location" onLocation={handleLocation} />}
             {step === 'order' && <OrderInput key="order" onSubmit={handleOrder} />}
