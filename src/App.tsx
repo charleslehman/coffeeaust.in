@@ -37,8 +37,8 @@ export default function App() {
   const handleReset = useCallback(() => {
     setResult(null);
     setOrder('');
-    setStep('location');
-  }, []);
+    setStep(location ? 'order' : 'location');
+  }, [location]);
 
   return (
     <HelmetProvider>
