@@ -1,15 +1,19 @@
-import { useState } from 'react';
-import type { Coordinates } from '../types/coffee-shop';
+import React, { useState, useCallback } from 'react';
+import { motion } from 'framer-motion';
+import { MapPin } from 'lucide-react';
+import { fadeInUp } from '@/utils/animations';
+import { analytics } from '@/utils/analytics';
+import type { Coordinates } from '@/data/types';
 
-interface Props {
+interface LocationPromptProps {
   onLocation: (coords: Coordinates) => void;
 }
 
-export default function LocationPrompt({ onLocation }: Props) {
+export const LocationPrompt: React.FC<LocationPromptProps> = ({ onLocation }) => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const requestLocation = () => {
+  const requestLocation = useCallback(() => {
     if (!navigator.geolocation) {
       setError('Geolocation is not supported by your browser.');
       return;
@@ -20,6 +24,7 @@ export default function LocationPrompt({ onLocation }: Props) {
 
     navigator.geolocation.getCurrentPosition(
       (position) => {
+        analytics.locationShared();
         onLocation({
           lat: position.coords.latitude,
           lng: position.coords.longitude,
@@ -33,24 +38,37 @@ export default function LocationPrompt({ onLocation }: Props) {
           setError('Could not get your location. Please try again.');
         }
       },
-      { enableHighAccuracy: true, timeout: 10000 }
+      { enableHighAccuracy: true, timeout: 10000 },
     );
-  };
+  }, [onLocation]);
 
   return (
-    <section className="step">
-      <h2 className="step-title">Where are you?</h2>
-      <p className="step-desc">
+    <motion.section
+      variants={fadeInUp}
+      initial="hidden"
+      animate="show"
+      className="flex flex-col"
+    >
+      <h2 className="font-serif text-[1.75rem] font-normal tracking-tight">
+        Where are you?
+      </h2>
+      <p className="mt-2 max-w-[36ch] text-sm text-[hsl(var(--muted-foreground))]">
         We'll find the best coffee shop near you.
       </p>
       <button
-        className="btn btn-primary"
+        className="btn-primary touch-target mt-8 w-full"
         onClick={requestLocation}
         disabled={loading}
+        aria-label="Share your location to find nearby coffee shops"
       >
+        <MapPin className="h-4 w-4" />
         {loading ? 'Finding you...' : 'Share my location'}
       </button>
-      {error && <p className="error">{error}</p>}
-    </section>
+      {error && (
+        <p className="mt-3 text-sm text-[hsl(var(--destructive))]" role="alert">
+          {error}
+        </p>
+      )}
+    </motion.section>
   );
-}
+};

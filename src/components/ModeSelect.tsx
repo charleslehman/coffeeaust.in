@@ -1,40 +1,66 @@
-import type { TravelMode } from '../types/coffee-shop';
+import React, { useCallback } from 'react';
+import { motion } from 'framer-motion';
+import { Footprints, Car } from 'lucide-react';
+import { fadeInUp, staggerContainer } from '@/utils/animations';
+import { analytics } from '@/utils/analytics';
+import type { TravelMode } from '@/data/types';
 
-interface Props {
+interface ModeSelectProps {
   onSelect: (mode: TravelMode) => void;
 }
 
-export default function ModeSelect({ onSelect }: Props) {
+export const ModeSelect: React.FC<ModeSelectProps> = ({ onSelect }) => {
+  const handleSelect = useCallback((mode: TravelMode) => {
+    analytics.modeSelected(mode);
+    onSelect(mode);
+  }, [onSelect]);
+
   return (
-    <section className="step">
-      <h2 className="step-title">Walking or driving?</h2>
-      <p className="step-desc">
+    <motion.section
+      variants={fadeInUp}
+      initial="hidden"
+      animate="show"
+      className="flex flex-col"
+    >
+      <h2 className="font-serif text-[1.75rem] font-normal tracking-tight">
+        Walking or driving?
+      </h2>
+      <p className="mt-2 max-w-[36ch] text-sm text-[hsl(var(--muted-foreground))]">
         Walking searches within 20 min. Driving within 15.
       </p>
-      <div className="mode-buttons">
-        <button className="btn btn-mode" onClick={() => onSelect('walk')}>
-          <span className="mode-icon">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="12" cy="5" r="2"/>
-              <path d="M10 22l2-7 3 3v6"/>
-              <path d="M14 13l-3-3-2 4"/>
-              <path d="M9 17l-3 4"/>
-            </svg>
-          </span>
-          Walk
-        </button>
-        <button className="btn btn-mode" onClick={() => onSelect('drive')}>
-          <span className="mode-icon">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M5 17h14v-5l-2-6H7L5 12z"/>
-              <circle cx="7.5" cy="17.5" r="1.5"/>
-              <circle cx="16.5" cy="17.5" r="1.5"/>
-              <path d="M5 12h14"/>
-            </svg>
-          </span>
-          Drive
-        </button>
-      </div>
-    </section>
+      <motion.div
+        variants={staggerContainer}
+        initial="hidden"
+        animate="show"
+        className="mt-8 grid grid-cols-2 gap-3"
+      >
+        <motion.button
+          variants={fadeInUp}
+          whileTap={{ scale: 0.98 }}
+          className="touch-target card flex flex-col items-center gap-3 px-4 py-8 transition-colors hover:border-[hsl(var(--primary))] hover:text-[hsl(var(--primary))]"
+          onClick={() => handleSelect('walk')}
+          role="button"
+          tabIndex={0}
+          aria-label="Search for coffee shops within walking distance"
+          onKeyDown={e => e.key === 'Enter' && handleSelect('walk')}
+        >
+          <Footprints className="h-7 w-7" />
+          <span className="text-sm font-medium">Walk</span>
+        </motion.button>
+        <motion.button
+          variants={fadeInUp}
+          whileTap={{ scale: 0.98 }}
+          className="touch-target card flex flex-col items-center gap-3 px-4 py-8 transition-colors hover:border-[hsl(var(--primary))] hover:text-[hsl(var(--primary))]"
+          onClick={() => handleSelect('drive')}
+          role="button"
+          tabIndex={0}
+          aria-label="Search for coffee shops within driving distance"
+          onKeyDown={e => e.key === 'Enter' && handleSelect('drive')}
+        >
+          <Car className="h-7 w-7" />
+          <span className="text-sm font-medium">Drive</span>
+        </motion.button>
+      </motion.div>
+    </motion.section>
   );
-}
+};
