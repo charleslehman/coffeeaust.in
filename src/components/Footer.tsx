@@ -3,7 +3,7 @@ import React from 'react';
 export const Footer: React.FC = () => {
   return (
     <footer className="safe-area-bottom mt-auto border-t border-[hsl(var(--border))] py-6 text-xs text-[hsl(var(--muted-foreground))]">
-      <p>24 curated Austin coffee shops. No ads, no affiliates.</p>
+      <p>32 curated Austin coffee shops. No ads, no affiliates.</p>
       <p className="mt-1">
         Made with love by{' '}
         <a
