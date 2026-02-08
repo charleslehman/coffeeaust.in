@@ -56,14 +56,30 @@ export default function App() {
         <meta name="theme-color" content="#faf8f5" />
       </Helmet>
 
-      {/* Desktop: centered card on a subtle background. Mobile: full-bleed. */}
-      <div className="min-h-dvh lg:flex lg:items-center lg:justify-center lg:p-8">
-        <div className="mx-auto flex min-h-dvh max-w-[520px] flex-col px-5 sm:px-6 lg:min-h-0 lg:w-[520px] lg:rounded-3xl lg:border lg:border-[hsl(var(--border))] lg:bg-white lg:px-10 lg:shadow-modal">
+      <div className="min-h-dvh lg:grid lg:grid-cols-[1fr_minmax(0,560px)_1fr] lg:gap-0">
+        {/* Left decorative panel — visible on desktop only */}
+        <div className="hidden lg:flex lg:flex-col lg:items-end lg:justify-center lg:pr-16 xl:pr-24">
+          <div className="max-w-[280px]">
+            <p className="font-serif text-5xl font-normal leading-tight tracking-tight xl:text-6xl">
+              Your next cup,<br />decided.
+            </p>
+            <p className="mt-4 text-base leading-relaxed text-[hsl(var(--muted-foreground))]">
+              One recommendation based on where you are and what you drink. No lists, no scrolling.
+            </p>
+            <div className="mt-8 flex items-center gap-3 text-sm text-[hsl(var(--muted-foreground))]">
+              <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-[hsl(var(--primary))]/10 text-xs">32</span>
+              curated Austin coffee shops
+            </div>
+          </div>
+        </div>
+
+        {/* Main app column */}
+        <div className="mx-auto flex min-h-dvh w-full max-w-[560px] flex-col px-5 sm:px-8 lg:border-x lg:border-[hsl(var(--border))] lg:bg-white lg:px-12">
           <Header onReset={handleReset} />
           <div className="mt-4 mb-6">
             <StepIndicator currentStep={step} />
           </div>
-          <main className="flex flex-1 flex-col pb-4">
+          <main className="flex flex-1 flex-col pb-6">
             <AnimatePresence mode="wait">
               {step === 'location' && <LocationPrompt key="location" onLocation={handleLocation} />}
               {step === 'order' && <OrderInput key="order" onSubmit={handleOrder} />}
@@ -73,6 +89,9 @@ export default function App() {
           </main>
           <Footer />
         </div>
+
+        {/* Right empty panel for symmetry */}
+        <div className="hidden lg:block" />
       </div>
     </HelmetProvider>
   );
